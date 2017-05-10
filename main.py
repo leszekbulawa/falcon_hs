@@ -15,10 +15,20 @@ class ThingsResource:
     <title>Title</title>
 </head>
 <body>
-<h1>Body</h1>
+<h2>Body</h2>
+<form method="post">
+<input type="text" name="input">
+<input type="submit" name="button" value="submit">
+</form>
 </body>
 </html>
 '''
+    def on_post(self, req, resp):
+        req_text = req.stream.read().decode('utf-8')
+        resp.status = falcon.HTTP_200  # This is the default status
+        resp.content_type = 'text/json'
+        d = {'req_text': req_text}
+        resp.body = json.dumps(d)
 
 
 class JsonResource:
