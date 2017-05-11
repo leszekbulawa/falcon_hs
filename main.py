@@ -1,5 +1,6 @@
 import falcon
 import json
+from urllib import parse
 
 from wsgiref.simple_server import make_server
 
@@ -24,11 +25,10 @@ class ThingsResource:
 </html>
 '''
     def on_post(self, req, resp):
-        req_text = req.stream.read().decode('utf-8')
+        req_args = parse.parse_qs(req.stream.read().decode('utf-8')) # get the message and parse it to dictionary
         resp.status = falcon.HTTP_200  # This is the default status
         resp.content_type = 'text/json'
-        d = {'req_text': req_text}
-        resp.body = json.dumps(d)
+        resp.body = json.dumps(req_args)
 
 
 class JsonResource:
