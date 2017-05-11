@@ -6,7 +6,7 @@ from wsgiref.simple_server import make_server
 
 class ThingsResource:
     def on_get(self, req, resp):
-        resp.status = falcon.HTTP_200  # This is the default status
+        resp.status = falcon.HTTP_200
         resp.content_type = 'text/html'
         resp.body = '''<!DOCTYPE html>
 <html lang="en">
@@ -23,10 +23,10 @@ class ThingsResource:
 
 class JsonResource:
     def on_get(self, req, resp):
-        resp.status = falcon.HTTP_200  # This is the default status
+        resp.status = falcon.HTTP_200
         resp.content_type = 'text/json'
-        d = {'message': 'Hello World!'}
-        resp.body = json.dumps(d)
+        content = {'message': 'Hello World!'}
+        resp.body = json.dumps(content)
 
 
 app = falcon.API()
