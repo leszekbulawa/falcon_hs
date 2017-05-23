@@ -1,5 +1,7 @@
 import falcon
 import json
+import jinja2
+import os
 
 from urllib import parse
 from wsgiref.simple_server import make_server
@@ -40,13 +42,38 @@ class JsonResource:
         resp.body = json.dumps(content)
 
 
+env = jinja2.Environment(
+    loader=jinja2.PackageLoader('templates', '.')
+)
+
+class TemplateResource:
+    def on_get(self, req, resp):
+        resp.status = falcon.HTTP_200
+        resp.content_type = 'text/html'
+        template = env.get_template('test_template.j2')
+        users = [
+            User('ann', 'Ann'),
+            User('bob', 'Bob'),
+            User('charlie', 'Charlie')
+        ]
+        resp.body = template.render(title='TEST', users=users)
+
+
+class User:
+    def __init__(self, url, username):
+        self.url = url
+        self.username = username
+
+
 app = falcon.API()
 
 things = ThingsResource()
 json_resource = JsonResource()
+template_resource = TemplateResource()
 
 app.add_route('/things', things)
 app.add_route('/other', json_resource)
+app.add_route('/template', template_resource)
 
 httpd = make_server('', 8000, app)
 print("Serving on port 8000...")
